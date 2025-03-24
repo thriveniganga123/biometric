@@ -1,0 +1,36 @@
+#include <LedControl.h>
+
+#define DIN_PIN 11  // Data In
+#define CS_PIN 10   // Chip Select
+#define CLK_PIN 13  // Clock
+
+LedControl lc = LedControl(DIN_PIN, CLK_PIN, CS_PIN, 1);
+
+void setup() {
+    lc.shutdown(0, false);   // Turn on the display
+    lc.setIntensity(0, 8);   // Set brightness (0-15)
+    lc.clearDisplay(0);      // Clear the matrix
+}
+
+void loop() {
+    displayMessage("HELLO");
+    delay(1000);
+}
+
+void displayMessage(String message) {
+    byte letters[][8] = {
+        {0x3E, 0x51, 0x49, 0x45, 0x3E, 0x00, 0x00, 0x00}, // H
+        {0x7F, 0x49, 0x49, 0x49, 0x36, 0x00, 0x00, 0x00}, // E
+        {0x7F, 0x09, 0x09, 0x09, 0x01, 0x00, 0x00, 0x00}, // L
+        {0x7F, 0x09, 0x09, 0x09, 0x01, 0x00, 0x00, 0x00}, // L
+        {0x3E, 0x41, 0x41, 0x41, 0x3E, 0x00, 0x00, 0x00}  // O
+    };
+
+    for (int i = 0; i < 5; i++) {  // Display each letter
+        for (int row = 0; row < 8; row++) {
+            lc.setRow(0, row, letters[i][row]);
+        }
+        delay(500);
+        lc.clearDisplay(0);
+    }
+}
